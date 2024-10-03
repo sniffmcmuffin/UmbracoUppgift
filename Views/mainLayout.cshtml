@@ -1,0 +1,47 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject Umbraco.Cms.Web.Common.UmbracoHelper UmbracoHelper
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = null;
+    ViewBag.Title = Model?.Value<string>("pageTitle") ?? null;
+
+    var rootContents = UmbracoHelper.ContentAtRoot();
+    var settings = rootContents?.FirstOrDefault(x => x.ContentType.Alias == "settingsPage") ?? null;
+    var siteName = settings?.Value<string>("siteName") ?? "Onatrix";
+    var siteTagline = settings?.Value<string>("siteTagline") ?? "Financial Solutions";
+    
+    var pageTitle = !string.IsNullOrEmpty(ViewBag.Title) ? $"{ViewBag.Title} | {siteName} - {siteTagline}" : $"{siteName} - {siteTagline}"; 
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://kit.fontawesome.com/e9400b1a1a.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/theme.css">
+        <link rel="icon" type="image/x-icon" href="~/media/zyujx2op/favicon.ico">
+        <title>@pageTitle</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <section class="topbar">
+                  @await Html.PartialAsync("partials/static/topbar.cshtml")
+                  @await Html.PartialAsync("partials/static/header.cshtml")
+            </section>
+    @if (!String.IsNullOrEmpty(ViewBag.Title) && 
+         !ViewBag.Title.Equals("Home", StringComparison.OrdinalIgnoreCase) && 
+         !Context.Request.Path.Value.Equals("/"))
+        {
+            @await Html.PartialAsync("partials/static/breadcrumb.cshtml")
+        }
+            <main>
+                @RenderBody()
+            </main>
+            @await Html.PartialAsync("partials/static/footer.cshtml")
+        </div>
+        <script src="/scripts/main.js"></script>
+    </body>
+</html>

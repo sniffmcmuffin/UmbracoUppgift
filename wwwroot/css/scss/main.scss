@@ -1,0 +1,18 @@
+@import "./mixins/mixins";
+
+@import "./core/base";
+
+@import "./components/wrapper";
+@import "./components/container";
+@import "./components/links";
+@import "./components/buttons";
+@import "./components/typography";
+
+@import "./sections/header";
+@import "./sections/footer";
+@import "./sections/home";
+@import "./sections/about";
+@import "./sections/services";
+@import "./sections/projects";
+@import "./sections/contact";
+@import "./sections/sidebar";

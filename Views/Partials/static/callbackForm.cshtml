@@ -1,0 +1,16 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "mainLayout.cshtml";
+
+}
+
+<section id="contact-section">
+<div class="container">
+	<h1>@ViewBag.Title</h1>
+
+	<form onsubmit="handleContactFormSubmit(event) novalidate">
+		@Html.GetBlockListHtml(Model.CallbackForm)
+	</form>
+</div>
+</section>

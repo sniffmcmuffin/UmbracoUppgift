@@ -1,0 +1,23 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject Umbraco.Cms.Web.Common.UmbracoHelper UmbracoHelper
+@{
+    var rootContents = UmbracoHelper.ContentAtRoot();
+    var settings = rootContents?.FirstOrDefault(x => x.ContentType.Alias == "settingsPage") ?? null;
+    var formImage = settings?.Value<IPublishedContent>("formImage")?.Url() ?? "";
+}
+
+<section class="sidebar-form">
+    <h5 class="title">How can we help you?</h5>
+    <p class="paragraph">Online support 24/7, we are here to help you</p>
+    <div class="form">
+        <div class="form-input-group">
+            <label class="form-label" for="email">E-mail address</label>
+            <div class="input-icon-wrapper">
+                <input id="email" name="email" type="email" placeholder="E-mail address" class="form-input" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+        </div>
+        <img class="form-image" src="@formImage" alt="Form Image">
+    </div>
+</section>

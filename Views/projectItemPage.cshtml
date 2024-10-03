@@ -1,0 +1,36 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject Umbraco.Cms.Web.Common.UmbracoHelper UmbracoHelper
+@{
+    Layout = "mainLayout.cshtml";
+    ViewBag.Title = Model.Name;
+
+    var rootContents = UmbracoHelper.ContentAtRoot();
+    var settings = rootContents?.FirstOrDefault(x => x.ContentType.Alias == "settingsPage") ?? null;
+    var dateAdded = Model?.Value<DateTime?>("dateAdded")?.ToString("MMMM dd, yyyy") ?? "No date available";
+}
+<section class="project-item">
+        <div class="main-content">
+            <div class="date">
+                <i class="fa-solid fa-calendar"></i>
+                <p>@dateAdded</p>    
+            </div>  
+            <div class="rich-text-content">
+                @Model.Value("pageContent")
+            </div>
+        </div>
+        <div class="sidebar">
+            @await Html.PartialAsync("partials/static/projectBar.cshtml")
+            @await Html.PartialAsync("partials/static/sidebar.cshtml")
+            @await Html.PartialAsync("partials/static/sidebarForm.cshtml")
+        </div>
+</section>
+<section class="tags-footer">
+    <h3 class="tags-headline">Tags</h3>
+    <div class="tag-list">
+        <span class="tag-item">Business Plans</span>
+        <span class="tag-item">Consulting</span>
+        <span class="tag-item">Onatrix</span>
+    </div>
+</section>
+@await Html.PartialAsync("partials/static/projectFooter.cshtml")

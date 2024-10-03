@@ -1,0 +1,182 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "mainLayout.cshtml";
+	ViewBag.Title = Model?.Value<string>("pageTitle") ?? "Home";
+
+	var backgroundImage = Model.Value<IPublishedContent>("heroBackgroundImage")?.Url() ?? "";
+    var signatureImage = Model.Value<IPublishedContent>("aboutSignatureImage")?.Url() ?? "";
+
+    var backgroundImageMap = Model.Value<IPublishedContent>("trustedBackgroundMap")?.Url() ?? "";
+    var backgroundImageGroup = Model.Value<IPublishedContent>("trustedBackgroundGroup")?.Url() ?? "";
+    var meetingBackgroundImage = Model.Value<IPublishedContent>("successBackgroundImage")?.Url() ?? "";
+
+    var sectionBackgroundColor = Model?.Value<string>("sectionBackgroundColor")?.ToLower() ?? "";
+    var backgroundColorStyle = (!string.IsNullOrEmpty(sectionBackgroundColor) && sectionBackgroundColor != "none") 
+        ? $"background-color: {sectionBackgroundColor};" 
+        : "";   
+
+    var projectImages = Model?.Value<IEnumerable<IPublishedContent>>("projectImages") ?? Enumerable.Empty<IPublishedContent>();   
+    var partnerImages = Model?.Value<IEnumerable<IPublishedContent>>("partnerImages") ?? Enumerable.Empty<IPublishedContent>();
+}
+
+<section id="hero-section" class="hero">
+	<div class="background" style="background-image:url(@backgroundImage); "></div>
+	<div class="container">
+		<div class="hero-content">
+			<h2 class="headline">@Model?.Value("heroHeadline")</h2>
+			<p class="ingress">@Model?.Value("heroText")</p>
+			<div>
+				<a href="@Model?.Value("heroButtonUrl")" class="btn btn-primary">@Model?.Value("heroButtonText")</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="about-us">
+    <div class="container">
+        <div class="content">
+            <div class="headline">
+                <h5>@Model.Value("aboutSectionTitle")</h5>
+                <h2>@Model.Value("aboutHeadline")</h2>
+            </div>
+            <blockquote class="quote">@Model.Value("aboutQuote")</blockquote>
+            <p>@Model.Value("aboutText")</p>
+            <div class="signature-container">
+                <div class="signature">
+                    <img class="signature-image" src="@signatureImage" alt="@Model.Value("aboutSignature")" >
+                    <div class="clarification">
+                        <p class="name"><pre>@Model.Value("aboutSignature")</pre></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-container">
+            <h3>Request a call back</h3>
+            <p><em>Dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat</em></p>
+            <form onsubmit="handleContactFormSubmit(event)" novalidate>
+                @if (Model.HasValue("callbackForm")) {
+                    var callbackForm = Model.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("callbackForm");
+                    @Html.GetBlockListHtml(callbackForm);
+                }
+                else {
+                    <p>Callback form content is not available.</p>
+                }
+            </form>
+        </div>
+    </div>
+</section>
+
+<section id="our-services" class="bg-gray">
+    <div class="container">
+        <h5>@Model.Value("sectionTitle")</h5> 
+        <h2>@Model.Value("customHeadline1")</h2>
+        <h2>@Model.Value("customHeadline2")</h2>
+        @await Html.PartialAsync("partials/static/ourServices.cshtml")
+    </div>
+</section>
+
+<section id="trusted-section">
+    <div class="container">
+        <div class="background background-map" style="background-image: url('@backgroundImageMap');"></div>
+        <div class="trusted-content">
+            <h2 class="headline">@Model?.Value("trustedSectionHeadline")</h2>
+            <h2 class="tagline">@Model?.Value("trustedSectionTagline")</h2>
+            <p class="ingress">@Model?.Value("trustedText")</p>
+            <div>
+                <a href="@Model?.Value("trustedButtonUrl")" class="btn btn-primary">
+                    @Model?.Value("trustedButtonText")
+                </a>
+            </div>
+        </div>
+        <div class="background background-group" style="background-image:url('@backgroundImageGroup');"></div>
+    </div>
+</section>
+
+<section id="success-section" style="@backgroundColorStyle"> 
+    <div class="container">
+        <div class="background background-map" style="background-image: url('@backgroundImageMap');"></div>
+        <div class="success-content">
+            <p>@Model?.Value("successHeadline")</p>
+            <h2>@Model?.Value("successTagline")</h2>
+            <div class="boaster">
+                <div class="boaster-grid">
+                    <h1>@Model?.Value("customersNumber")</h1>
+                    <h6>@Model?.Value("customersBoast")</h6>
+                </div>
+                <div class="boaster-grid">
+                    <h1>@Model?.Value("projectsNumber")</h1>
+                    <h6>@Model?.Value("projectsBoast")</h6>
+                </div>
+                <div class="boaster-grid">
+                    <h1>@Model?.Value("branchesNumber")</h1>
+                    <h6>@Model?.Value("branchesBoast")</h6>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="background background-group" style="background-image:url('@meetingBackgroundImage');"></div>
+</section>
+
+<section id="projects-section" class="projects">
+    <div class="container">
+        <p>Recent Projects</p>
+        <h2>Our Projects</h2>
+    </div>
+        <div class="projects-images">
+            @if (projectImages.Any())
+            {
+                int index = 1; 
+                foreach (var image in projectImages)
+                {
+                    var imageUrl = image.Url();
+                    var altText = image.Name;
+
+                 
+                    var tagline = Model.Value<string>($"projectTagline{index}") ?? "";
+                    var service = Model.Value<string>($"projectServices{index}") ?? "";
+                    index++; // Increment for the next tagline and service
+
+                    <div class="project-logo">
+                        <img src="@imageUrl" alt="@altText" />
+                        <div class="text-overlay">
+                            @if (!string.IsNullOrEmpty(tagline))
+                            {
+                                <p class="tagline">@tagline</p>
+                            }
+                      
+                                <p class="service">Financial Services</p>
+                 
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No project images found.</p>
+            }
+        </div>
+</section>
+
+<section id="partners-section" class="partners">
+    <div class="container">
+        <div class="partners-logos">
+            @if (partnerImages.Any())
+            {
+                foreach (var image in partnerImages)
+                {
+                    var imageUrl = image.Url();
+                    var altText = image.Name; 
+                    <div class="partner-logo">
+                        <img src="@imageUrl" alt="@altText" />
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No partner images found.</p>
+            }
+        </div>
+    </div>
+</section>

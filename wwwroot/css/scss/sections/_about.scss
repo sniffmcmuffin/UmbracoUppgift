@@ -1,0 +1,201 @@
+#about-page {    
+  margin-bottom: 130px; 
+ 
+    .container {
+        margin-top: 6.5em;
+        display: flex; 
+        align-items: flex-start; 
+        gap: 40px; 
+        justify-content: space-between; 
+
+        .main-content {
+            flex: 1 1 33%; 
+            display: flex;
+            flex-direction: column; 
+            gap: 10px; 
+    
+        .ceo-image {
+          max-width: 100%; 
+          height: auto; 
+          margin-bottom: 10px; 
+        }
+      }
+    
+      .right {
+          flex: 2 1 67%;
+  
+          .about-quote {
+              color: var(--color-dark);
+              font-style: italic;
+              font-size: 1.2rem;
+              font-weight: 200;
+              text-align: left; 
+              margin-left: auto; 
+              white-space: pre-wrap; 
+            }
+      
+          .ingress {            
+            text-align: left; 
+            margin-left: auto; 
+            font-size: 95%;
+            white-space: pre-wrap; 
+          }
+      }
+    }
+  }
+
+  #section-reviews {
+    background-color: var(--color-gray);
+    max-height: 894px;
+  
+    .container {
+      display: flex;
+    
+      .left {
+        flex: 1; 
+        display: flex;
+        flex-direction: column; 
+        order: 1; 
+        margin-right: -362px; /* Crap solution */
+                
+        .headline {
+          margin-top: 5em;
+          color: var(--color-accent);
+        }
+
+        .tagline {
+          margin-right: 3em;
+        }
+
+        .review {
+          margin-right: 3em;
+          font-size: 1.2rem;
+          font-style: italic;
+
+        }
+
+        .name {
+          margin-top: 1em;
+        }
+
+        .company {
+          font-size: 1.2rem;
+          font-style: italic;
+        }
+    
+        .review-stars {
+          display: flex; 
+          align-items: center; 
+          gap: 5px; 
+          margin: 10px 0; 
+        }
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end; 
+      position: relative; 
+      order: 2; 
+   
+      .ceo-image {
+    
+        position: relative; 
+        right: 85px; 
+        top: 0;
+        width: calc(100% + 20px); 
+        height: auto; 
+        width: 894px;
+        transform: translateX(50%);     
+      }
+    }
+   
+    .review-star {
+     
+    }    
+  }
+  
+  .section-experts {
+    margin-top: 100px;
+    margin-bottom: 80px;
+  
+    .container {
+
+      h2 {
+        text-align: center;
+        padding: 0 300px;
+      }
+
+      h6 {
+        text-align: center;
+      }
+  
+      .experts {
+        .row {
+          display: grid;
+          gap: 20px;
+  
+          &:nth-child(1) {
+            grid-template-columns: repeat(3, 1fr);
+  
+            @media (max-width: 1024px) {
+              grid-template-columns: repeat(2, 1fr); 
+            }
+  
+            @media (max-width: 768px) {
+              grid-template-columns: 1fr; 
+            }
+          }
+  
+          &:nth-child(2) {
+            grid-template-columns: repeat(4, 1fr);
+  
+            @media (max-width: 1024px) {
+              grid-template-columns: repeat(2, 1fr); 
+            }
+  
+            @media (max-width: 768px) {
+              grid-template-columns: 1fr; 
+            }
+          }
+        }
+  
+        .item {
+          background-color: #f9f9f9;
+          padding: 20px;
+          border-radius: 8px;
+          transition: box-shadow 0.3s ease;
+  
+          .header {
+            h4 {
+              margin-bottom: 10px;
+              font-size: 1.2rem;
+              font-weight: bold;
+              color: #333;
+            }
+          }
+  
+          .body {
+            img {
+              width: 100%;
+              height: auto;
+              border-radius: 4px;
+            }
+          }
+  
+          .footer {
+            p {
+              margin-top: 10px;
+              color: #666;
+              font-size: 1rem;
+            }
+          }
+  
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          }
+        }
+      }
+    }
+  }

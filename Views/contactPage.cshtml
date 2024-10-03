@@ -1,0 +1,52 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContactPage>;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@inject Umbraco.Cms.Web.Common.UmbracoHelper UmbracoHelper
+@{
+    Layout = "mainLayout.cshtml";
+    ViewBag.Title = Model.Value("pageTitle");
+
+	var rootContents = UmbracoHelper.ContentAtRoot();
+	var settings = rootContents?.FirstOrDefault(x => x.ContentType.Alias == "settingsPage") ?? null;
+    var contactMap = settings?.Value<IPublishedContent>("contactMap")?.Url() ?? "";
+	var partnerImages = Model?.Value<IEnumerable<IPublishedContent>>("partnerImages") ?? Enumerable.Empty<IPublishedContent>();
+}
+
+<div class="footer-special">
+    @await Html.PartialAsync("partials/static/projectFooter.cshtml")
+</div>
+<section id="contact-section">
+    <div class="background" style="background-image:url('@contactMap');"></div>
+    <div class="container">
+        <div class="contact-content">
+            <p class="callback">@Model?.Value("contactCallback")</p>
+            <h2 class="headline">@Model?.Value("contactTitle")</h2>
+            <p class="ingress">@Model?.Value("contactText")</p>
+ 
+        </div>
+        <form onsubmit="handleContactFormSubmit(event) novalidate">
+            @Html.GetBlockListHtml(Model.ContactForm)
+        </form>
+    </div>
+</section>
+<section id="contact-partners" class="partners">
+    <div class="container">
+        <div class="partners-logos">
+            @if (partnerImages.Any())
+            {
+                foreach (var image in partnerImages)
+                {
+                    var imageUrl = image.Url();
+                    var altText = image.Name; 
+                    <div class="partner-logo">
+                        <img src="@imageUrl" alt="@altText" />
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No partner images found.</p>
+            }
+        </div>
+    </div>
+</section>

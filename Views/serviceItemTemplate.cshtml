@@ -1,0 +1,38 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject Umbraco.Cms.Web.Common.UmbracoHelper UmbracoHelper
+@{
+    Layout = "mainLayout.cshtml";
+    ViewBag.Title = Model.Name;
+
+    var rootContents = UmbracoHelper.ContentAtRoot();
+    var settings = rootContents?.FirstOrDefault(x => x.ContentType.Alias == "settingsPage") ?? null;
+    var sidebarImage = settings?.Value<IPublishedContent>("sidebarImage")?.Url() ?? "";
+}
+<section class="service-item">
+    <div class="container">
+        <div class="sidebar">
+            <h3 class="sidebar-headline">About us</h3>
+            <img class="sidebar-image" src="@sidebarImage" alt="Sidebar Image">
+            <p class="sidebar-p">Dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non</p>
+            @await Html.PartialAsync("partials/static/sidebarForm.cshtml")
+        </div>
+        
+        <div class="main-content rich-text-content">
+            @Model.Value("pageContent")
+        </div>
+    </div>
+</section>
+<div class="container">
+<form class="contact-form" onsubmit="handleContactFormSubmit(event)" novalidate>
+    @if (Model.HasValue("questionForm")) {
+        var questionForm = Model.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("questionForm");
+        
+        @Html.GetBlockListHtml(questionForm);
+    }
+    else {
+        <p>Question form content is not available.</p>
+    }
+</form>
+</div>
+@await Html.PartialAsync("partials/static/projectFooter.cshtml")

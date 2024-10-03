@@ -1,0 +1,91 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+        scroll-behavior: smooth;
+    }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+html, body, section, div, header, footer, main, aside, nav, blockquote, p, span {
+    margin: 0;
+    padding: 0;    
+}
+
+img, svg {
+    vertical-align: middle;
+}
+
+body {
+    @include text;
+    font-size: 16px;
+    color: var(--color-default); // Fallback color
+}
+
+.pagination {
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      margin-bottom: 50px;
+  
+      .change {
+        font-size: 1.2rem; 
+        color: rgba(0, 0, 0, 1);
+        margin: 0 15px; 
+        text-decoration: none;
+  
+        &.inactive {
+          cursor: default;
+          opacity: 0.2; 
+        }
+      }
+  
+      .pages {
+        display: flex;
+        gap: 15px; 
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        li {
+          font-size: 1.2rem; 
+          color: #000;
+          display: flex;
+          align-items: center; 
+          justify-content: center;
+          width: 40px; 
+          height: 40px; 
+          line-height: 40px; 
+          text-align: center;
+          border-radius: 50%;
+          
+          &.number {
+            background-color: transparent; 
+            color: rgba(0, 0, 0, 1); 
+  
+            a {
+              text-decoration: none;
+              color: inherit;
+              display: block;
+              width: 100%; 
+              height: 100%; 
+              line-height: 40px; 
+            }
+  
+            &.active {
+              color: #000; 
+              border: 1px solid rgba(0, 0, 0, 0.2); 
+              background-color: var(--color-light); 
+            }
+          }
+        }
+      }
+    }
+  }
+  

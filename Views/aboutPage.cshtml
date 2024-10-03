@@ -1,0 +1,116 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+
+@{
+    Layout = "mainLayout.cshtml";
+    ViewBag.Title = Model?.Value("pageTitle") ?? null;
+
+    	var selection = Umbraco.Content(Guid.Parse("ee27b837-7ae7-4d6e-aea4-396183c43e1c"))
+    .ChildrenOfType("expertItemTemplate")
+    .Where(x => x.IsVisible());
+
+        var itemsPerPage = 7;
+
+    if (!int.TryParse(Context.Request.Query["page"], out int currentPage))
+        currentPage = 1;
+        
+    var totalItems = selection?.Count() ?? 0;
+    var pagedItems = selection?.Skip((currentPage - 1 ) * itemsPerPage).Take(itemsPerPage);
+
+    var ceoImage = Model.Value<IPublishedContent>("mainImage")?.Url() ?? "";
+    var sectionBackgroundColor = Model?.Value<string>("sectionBackgroundColor")?.ToLower() ?? "";
+    var backgroundColorStyle = (!string.IsNullOrEmpty(sectionBackgroundColor) && sectionBackgroundColor != "none") 
+        ? $"background-color: {sectionBackgroundColor};" 
+        : "";      
+
+    var starImage = Model.Value<IPublishedContent>("starImage")?.Url() ?? "";
+    var reviewsImage = Model.Value<IPublishedContent>("reviewsImage")?.Url() ?? "";
+    var reviewsStars = Model.Value<int?>("reviewsStars") ?? 0;
+}
+
+<section id="about-page" class="about">
+    <div class="container">
+        <div class="main-content">
+            <img class="ceo-image" src="@ceoImage" alt="CEO Image">
+            <p class="quote">@Model?.Value("mainCeo")</p>
+        </div>
+        <div class="right">
+            <p class="about-quote">@Model?.Value("mainQuote")</p>
+            <p class="ingress">@Model?.Value("mainText")</p>
+        </div>
+    </div>
+</section>
+<section id="section-reviews" class="reviews" style="@backgroundColorStyle">
+    <div class="container" >
+        <div class="left">
+            <p class="headline">@Model?.Value("reviewsSectionTitle")</p>
+            <h2 class="tagline">@Model?.Value("reviewsHeadline")</h2>
+            <p class="review">@Model?.Value("reviewsText")</p>
+            <div class="review-stars"> 
+                @for (var i = 0; i < reviewsStars; i++)
+                {
+                    <img class="review-star" src="@starImage" alt="Review Star">
+                }
+            </div>
+            <p class="name">@Model?.Value("reviewsName")</p>
+            <p class="company">@Model?.Value("reviewsCompany")</p>
+        </div>
+        <div class="main-content">
+            <img class="ceo-image" src="@reviewsImage" alt="reviewsName">          
+        </div>
+    </div>
+</section>
+<section class="section-experts">
+    <div class="container">
+        <h6 class="headline">@Model?.Value("expertsTitle")</h6>
+        <h2 class="headline">@Model?.Value("expertsHeadline")</h2>
+        <div class="experts">
+            @if (pagedItems != null && pagedItems.Any()) 
+            {
+                var pagedItemsList = pagedItems.ToList(); 
+                <div class="row">
+                    @for (var i = 0; i < pagedItemsList.Count() && i < 3; i++)
+                    {
+                        var item = pagedItemsList[i];
+                        var image = item?.Value<IPublishedContent>("thumbnailImage")?.Url() ?? "";
+                        var preamble = item?.Value<string>("preamble") ?? "";
+                            <div class="item">
+                                <div class="header">
+                                    <h4>@item.Name()</h4>    
+                                </div>
+                                <div class="body">
+                                    <img src="@image" alt="@item.Name()">
+                                </div>
+                                <div class="footer">
+                                    <p>@preamble</p>
+                                </div>
+                            </div>
+                    }
+                </div>
+                 <div class="row">
+                    @for (var i = 3; i < pagedItemsList.Count() && i < 7; i++)
+                    {
+                        var item = pagedItemsList[i];
+                        var image = item?.Value<IPublishedContent>("thumbnailImage")?.Url() ?? "";
+                        var preamble = item?.Value<string>("preamble") ?? "";
+                            <div class="item">
+                                <div class="header">
+                                    <h4>@item.Name()</h4>    
+                                </div>
+                                <div class="body">
+                                    <img src="@image" alt="@item.Name()">
+                                </div>
+                                <div class="footer">
+                                    <p>@preamble</p>
+                                </div>
+                            </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<section class="topbar">
+    @await Html.PartialAsync("partials/static/projectFooter.cshtml")
+</section>

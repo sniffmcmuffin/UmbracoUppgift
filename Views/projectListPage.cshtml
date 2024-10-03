@@ -1,0 +1,90 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "mainLayout.cshtml";
+
+	var selection = Umbraco.Content(Guid.Parse("3c01f578-4ee2-47f8-8ba7-3ca55eef125f"))
+    .ChildrenOfType("projectItemTemplate")
+    .Where(x => x.IsVisible());
+
+    var itemsPerPage = 4;
+
+    if (!int.TryParse(Context.Request.Query["page"], out int currentPage))
+        currentPage = 1;
+        
+    var totalItems = selection?.Count() ?? 0;
+    var pagedItems = selection?.Skip((currentPage - 1 ) * itemsPerPage).Take(itemsPerPage);
+}
+
+<section class="projects-section">
+    <div class="container">
+        <div class="main-content">
+  
+            <div class="services">
+                @if (pagedItems != null) 
+                {
+                    @foreach (var item in pagedItems)
+                    {
+                        var image = item?.Value<IPublishedContent>("thumbnailImage")?.Url() ?? "";
+                        var preamble = item?.Value<string>("preamble") ?? "";
+                        var dateAdded = item.Value<DateTime?>("dateAdded")?.ToString("MMMM dd, yyyy") ?? "No date available";
+
+                        <a href="@item.Url()">
+                            <div class="item">
+                                <div class="body">
+                                    <img src="@image" alt="@item.Name()">
+                                </div>
+                                <div class="text-column">
+                                    <div class="header">
+                                        <h4>@item.Name()</h4>    
+                                    </div>
+                                    <div class="date">
+                                        <i class="fa-solid fa-calendar"></i>
+                                        <p>@dateAdded</p>    
+                                    </div>
+                                    <div class="footer">
+                                        <p>@preamble</p>
+                                    </div>
+                                    <div class="read">Read More <i class="fa-solid fa-arrow-right"></i></div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+               <section class="pagination">
+            <div class="container">
+                @if (currentPage > 1)
+                {
+                    <a href="?page=@(currentPage - 1)" class="change">PREV</a>
+                }
+                else
+                {
+                    <span class="change inactive">PREV</span>
+                }
+                <ul class="pages">
+                    @for (int i = 1; i <= Math.Ceiling((decimal)totalItems / itemsPerPage); i++)
+                    {
+                        <li class="@((i == currentPage) ? "number active" : "number")">
+                            <a href="?page=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+                @if (currentPage < Math.Ceiling((Decimal)totalItems / itemsPerPage)) 
+                {
+                    <a class="change" href="?page=@(currentPage + 1)">NEXT</a>
+                }
+                else 
+                {
+                    <span class="change inactive">NEXT</span>
+                }
+            </div>
+        </section>
+        </div>        
+        <div class="sidebar">
+            @await Html.PartialAsync("partials/static/sidebar.cshtml")
+            @await Html.PartialAsync("partials/static/sidebarForm.cshtml")
+        </div>
+    </div>
+</section>
+@await Html.PartialAsync("partials/static/projectFooter.cshtml")

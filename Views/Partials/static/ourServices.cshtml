@@ -1,0 +1,30 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	var selection = Umbraco.Content(Guid.Parse("9f28fb69-f0f1-41d1-b5ec-2c8fec7a4968"))
+    .ChildrenOfType("serviceItemTemplate")
+    .Where(x => x.IsVisible())
+    .Take(6);
+}
+
+<div class="services">
+    @foreach (var item in selection)
+    {
+        var image = item?.Value<IPublishedContent>("thumbnailImage")?.Url() ?? "";
+        var preamble = item?.Value<string>("preamble") ?? "";
+
+        <a href="@item.Url()">
+            <div class="serv-item">
+                <div class="serv-header">
+                    <h4>@item.Name()</h4>    
+                </div>
+                <div class="serv-body">
+                    <img src="@image" alt="@item.Name()">
+                </div>
+                <div class="serv-footer">
+                    <p>@preamble</p>
+                </div>
+            </div>
+        </a>
+    }
+</div>
